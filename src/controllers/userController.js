@@ -247,7 +247,7 @@ const searchUsers = async (req, res) => {
   }
 };
 module.exports = {
-  deleteUser,
+  // deleteUser,
   updateUser,
   getUser,
   getFollowings,
