@@ -1,10 +1,7 @@
 
-# Instagram clone using MERN stack
+# Authentication API using Node.js
 
-This is the backend repo built with Express and MongoDB. If you looking for the frontend repo : https://github.com/yassinjouao/instagram-clone-frontend
+This is the backend authentication api repo built with Express and MongoDB
 
-https://github.com/yassinjouao/instagram-clone-backend/assets/44931090/18191d05-e266-4e06-a7d8-360fff500af6
 
-## Authors
 
-- [@yassinjouao](https://github.com/yassinjouao)
