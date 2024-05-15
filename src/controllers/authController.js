@@ -2,6 +2,7 @@ const bcrypt = require("bcrypt");
 const User = require("../Models/userModel");
 const jwt = require("jsonwebtoken");
 const generateToken = require("../utils/generateToken");
+const passport = require("passport");
 
 const signup = async (req, res) => {
   try {
@@ -31,34 +32,39 @@ const signup = async (req, res) => {
 };
 const login = async (req, res) => {
   try {
-    const { username, password } = req.body;
-    const user = await User.findOne({ username: username });
-    if (!user) {
-      return res.status(401).send({
-        status: "failure",
-        message: "user does not exist",
+    const { username, password, googleToken } = req.body;
+    if (googleToken) {
+      // Handle Google login using Passport authentication
+      passport.authenticate('google', { failureRedirect: '/login' })(req, res);
+    }else{
+      const user = await User.findOne({ username: username });
+      if (!user) {
+        return res.status(401).send({
+          status: "failure",
+          message: "user does not exist",
+        });
+      }
+      const match = await bcrypt.compare(password, user.password);
+      if (!match) {
+        return res.status(401).send({
+          status: "failure",
+          message: "password is incorrect",
+        });
+      }
+      const accessToken = generateToken.generateAccessToken(user);
+      const refreshToken = generateToken.generateRefreshToken(user);
+      await User.findByIdAndUpdate(user._id, {
+        jwtToken: refreshToken,
+      });
+      const { jwtToken, password: newpass, ...other } = user._doc;
+      res.status(200).send({
+        status: "success",
+        message: "logged in successfully",
+        data: other,
+        accessToken,
+        refreshToken,
       });
     }
-    const match = await bcrypt.compare(password, user.password);
-    if (!match) {
-      return res.status(401).send({
-        status: "failure",
-        message: "password is incorrect",
-      });
-    }
-    const accessToken = generateToken.generateAccessToken(user);
-    const refreshToken = generateToken.generateRefreshToken(user);
-    await User.findByIdAndUpdate(user._id, {
-      jwtToken: refreshToken,
-    });
-    const { jwtToken, password: newpass, ...other } = user._doc;
-    res.status(200).send({
-      status: "success",
-      message: "logged in successfully",
-      data: other,
-      accessToken,
-      refreshToken,
-    });
   } catch (e) {
     res.status(500).send({
       status: "failure",

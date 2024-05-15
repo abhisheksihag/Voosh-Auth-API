@@ -50,6 +50,22 @@ const UserSchema = new mongoose.Schema({
   jwtToken: {
     type: String,
   },
+  googleId: {
+    type: String,
+    unique: true,
+  },
+  googleName: {
+    type: String,
+  },
+  googleEmail: {
+    type: String,
+  },
+  googleProfilePicture: {
+    type: String,
+  },
+  isprivate:{
+    type: Boolean,
+  },
 });
 
 module.exports = mongoose.model("User", UserSchema);
