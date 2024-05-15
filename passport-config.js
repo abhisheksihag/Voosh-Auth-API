@@ -3,8 +3,8 @@ const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const User = require('../Voosh-Auth-API/src/Models/userModel');
 
 passport.use(new GoogleStrategy({
-    clientID: '369041213499-5b4iviup487ukp16ic3k579lovcf3p99.apps.googleusercontent.com',
-    clientSecret: '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',
+    clientID: GOOGLE_CLIENT_ID,
+    clientSecret: GOOGLE_CLIENT_SECRET,
     callbackURL: "http://localhost:8000/auth/google/callback"
   },
   async (accessToken, refreshToken, profile, done) => {
